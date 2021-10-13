@@ -1,0 +1,4 @@
+{
+    "python.pythonPath": "/bin/python3",
+    "python.analysis.extraPaths": ["/home/stathis/git/Projects-YS02/src"]
+}
