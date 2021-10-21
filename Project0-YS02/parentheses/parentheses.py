@@ -27,16 +27,18 @@ class Stack:
 
     # push data to the top of the stack
     def push(self, data):
+        # Data gets inserted to the head of the list
         self.list.insert(0,data)
 
     # pop the top element from the stack
     def pop(self):
+        # Pops the first element of the list
         return self.list.pop(0)
     
     # prints the contents of the stack (top to bottom)
     def print(self):
         for item in self.list:
-            print(item, end = ' ')
+            print(item, end = '')
         print("\n---------------")
 
 
