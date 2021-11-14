@@ -118,7 +118,7 @@ def depthFirstSearch(problem):
     #   function DEPTH-FIRST-SEARCH(problem) returns a solution or failure
 
     # node ← a node with STATE=problem.INITIAL-STATE, PATH-COST=0
-    node = (problem.getStartState(), 0, False, False)
+    node = (problem.getStartState(), [], 0, False)
     # if problem.GOAL-TESt(node.STATE) then return SOLUTION(node)
     if problem.isGoalState(node[0]) == True:
             return []
@@ -135,7 +135,7 @@ def depthFirstSearch(problem):
         # node ← POP(frontier)
         node = frontier.pop()
         # add node.STATE to explored
-        explored.add(node[0])
+        # explored.add(node[0])
 
         # if problem.GOAL-TEST(child.STATE) then return SOLUTION(child)
         if problem.isGoalState(node[0]):
@@ -144,7 +144,7 @@ def depthFirstSearch(problem):
             # While there is a parent node to go to, insert the actions to go there
             # and update the currentNode to the currentNode's parent
             while currentNode[3]:
-                solution.insert(0, currentNode[2])
+                solution.insert(0, currentNode[1])
                 currentNode = currentNode[3]
 
             return solution
@@ -152,11 +152,12 @@ def depthFirstSearch(problem):
         # for each action in problem.ACTIONS(node.STATE) do
         for expandedNode in problem.expand(node[0]):
             # child ← CHILD-NODE(problem, node, action)
-            # child stores the child to the current state, the stepCost,
-            # the action to get there and the parent node of the child
-            child = (expandedNode[0], expandedNode[2], expandedNode[1], node)
+            # child stores the child to the current state,the action to get there,
+            # the step cost and the parent node of the child
+            child = (expandedNode[0], expandedNode[1], expandedNode[2], node)
             # if child.STATE is not in explored or frontier then
             if child[0] not in explored:
+                    explored.add(node[0])
                 # frontier ← INSERT(child, frontier)
                     frontier.push(child)
     util.raiseNotDefined()
@@ -167,7 +168,7 @@ def breadthFirstSearch(problem):
     #   function BREADTH-FIRST-SEARCH(problem) returns a solution or failure
 
     # node ← a node with STATE=problem.INITIAL-STATE, PATH-COST=0
-    node = (problem.getStartState(), 0, False, False)
+    node = (problem.getStartState(), [], 0, False)
     # if problem.GOAL-TESt(node.STATE) then return SOLUTION(node)
     if problem.isGoalState(node[0]) == True:
             return []
@@ -184,7 +185,7 @@ def breadthFirstSearch(problem):
         # node ← POP(frontier)
         node = frontier.pop()
         # add node.STATE to explored
-        explored.add(node[0])
+        # explored.add(node[0])
 
         # if problem.GOAL-TEST(child.STATE) then return SOLUTION(child)
         if problem.isGoalState(node[0]):
@@ -193,7 +194,7 @@ def breadthFirstSearch(problem):
             # While there is a parent node to go to, insert the actions to go there
             # and update the currentNode to the currentNode's parent
             while currentNode[3]:
-                solution.insert(0, currentNode[2])
+                solution.insert(0, currentNode[1])
                 currentNode = currentNode[3]
 
             return solution
@@ -201,11 +202,13 @@ def breadthFirstSearch(problem):
         # for each action in problem.ACTIONS(node.STATE) do
         for expandedNode in problem.expand(node[0]):
             # child ← CHILD-NODE(problem, node, action)
-            # child stores the child to the current state, the stepCost,
-            # the action to get there and the parent node of the child
-            child = (expandedNode[0], expandedNode[2], expandedNode[1], node)
+            # child stores the child to the current state,the action to get there,
+            # the step cost and the parent node of the child
             # if child.STATE is not in explored or frontier then
+            child = (expandedNode[0], expandedNode[1], expandedNode[2], node)
             if child[0] not in explored:
+                explored.add(node[0])
+
                 if(child[0]) not in (node[0] for node in frontier.list):
                 # frontier ← INSERT(child, frontier)
                     frontier.push(child)
@@ -225,91 +228,37 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     # #   function A-STAR-SEARCH(problem) returns a solution or failure
 
-    # # node ← a node with STATE=problem.INITIAL-STATE, PATH-COST=0
-    # node = (problem.getStartState(), 0, [], False)
-    # # if problem.GOAL-TESt(node.STATE) then return SOLUTION(node)
-    # if problem.isGoalState(node[0]) == True:
-    #         return []
-    # # frontier ← a FIFO queue with node as the only element
-    # frontier = util.PriorityQueue()
-    # frontier.push(node, 0)
-    # # explored ← an empty set
-    # explored = set()
-    # # loop do
-    # while True:
-    #     # if EMPTY?(frontier) then return failure
-    #     if frontier.isEmpty() == True:
-    #         return False
-    #     # node ← POP(frontier)
-    #     node = frontier.pop()
-    #     # add node.STATE to explored
-    #     if node in explored:
-    #         continue
-    #     explored.add(node[0])
-
-    #     # if problem.GOAL-TEST(child.STATE) then return SOLUTION(child)
-    #     if problem.isGoalState(node[0]):
-    #         # solution = []
-    #         # currentNode = node
-    #         # # While there is a parent node to go to, insert the actions to go there
-    #         # # and update the currentNode to the currentNode's parent
-    #         # while currentNode[3]:
-    #         #     solution.insert(0, currentNode[2])
-    #         #     currentNode = currentNode[3]
-
-    #         return node[1]
-
-    #     # for each action in problem.ACTIONS(node.STATE) do
-    #     for expandedNode in problem.expand(node[0]):
-    #         sequence = [node[2]] + [expandedNode[1]]
-    #         print(type(sequence))
-    #         print("node1 -->", [node[2]], "expandedNode1 -->", [expandedNode[1]])
-    #         # child ← CHILD-NODE(problem, node, action)
-    #         # child stores the child to the current state, the stepCost,
-    #         # the action to get there and the parent node of the child
-    #         child = (expandedNode[0], expandedNode[2], sequence, node)
-    #         # sequence = []
-    #         # currentNode = node
-    #         totalCost = node[1] + expandedNode[2] + heuristic(expandedNode[0], problem)
-    #         print(totalCost)
-    #         # While there is a parent node to go to, insert the actions to go there
-    #         # and update the currentNode to the currentNode's parent
-    #         # while currentNode[3]:
-    #         #     sequence.insert(0, currentNode[2])
-    #         #     currentNode = currentNode[3]
-    #         # # print(action, "==")
-    #         # costOfSequence = problem.getCostOfActionSequence(sequence)
-            
-    #         # # if child.STATE is not in explored or frontier then
-    #         # if child[0] not in explored:
-    #         #     if(child[0]) not in (node[0] for node in frontier.heap):
-    #         #     # frontier ← INSERT(child, frontier)
-    #         frontier.push(child, totalCost)
-
-
-    node = problem.getStartState()
-    if problem.isGoalState(node):
+    node = (problem.getStartState(), [], 0, False)
+    # node = problem.getStartState()
+    if problem.isGoalState(node[0]):
         return []
 
-    explored = set()
 
     frontier = util.PriorityQueue()
-    frontier.push((node, [], 0), 0)
+    frontier.push(node, 0)
+    explored = set()
 
     while True:
         if frontier.isEmpty() == True:
             return False
         node = frontier.pop()
+        if problem.isGoalState(node[0]):
+            return node[1]
         if node[0] not in explored:
             explored.add(node[0])
-            if problem.isGoalState(node[0]):
-                return node[1]
 
             for expandedNode in problem.expand(node[0]):
+                # Sequence stores the sequence of actions to get to Node
+                # Plus the action to get to the newly expanded node from Node
                 sequence = node[1] + [expandedNode[1]]
+
+                # totalCost stores the total cost to get to Node plus the
+                # cost to get to the newly expanded node from Node
                 totalCost = node[2] + expandedNode[2]
 
-                child = (expandedNode[0], sequence, totalCost)
+                #  child stores the current state, the sequence of actions to get to
+                #  the newly expanded node, the total cost and the parent node of the child
+                child = (expandedNode[0], sequence, totalCost, node)
                 frontier.push(child, totalCost + heuristic(expandedNode[0], problem))
     util.raiseNotDefined()
 
