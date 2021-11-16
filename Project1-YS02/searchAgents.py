@@ -352,8 +352,11 @@ class CornersProblem(search.SearchProblem):
         children = []
         for action in self.getActions(state):
             "*** YOUR CODE HERE ***"
+            # Similar to PositionSearchProblem's class expand method
             nextState = self.getNextState(state, action)
             cost = self.getActionCost(state, action, nextState)
+
+            # nodes store the updated (from getNextState) cornersFound tuple
             children.append(((nextState, self.cornersFound), action, cost))
 
         self._expanded += 1 # DO NOT CHANGE
@@ -384,10 +387,10 @@ class CornersProblem(search.SearchProblem):
         "*** YOUR CODE HERE ***"
         
         # self.walls stores the positions of all the walls of the grid
-        # Hitting a wall is not a valid move and therefore it's ignored
+        # Hitting a wall is not a valid move and therefore is ignored
         if self.walls[nextx][nexty] == False:
 
-            # Convert tuple to list, and update it using the current state
+            # Convert the tuple to a list, and update it using the current state
             self.cornersFound = list(state[1])
 
             # If a corner is found then update the found corners list accordingly
@@ -395,10 +398,10 @@ class CornersProblem(search.SearchProblem):
                 if (nextx, nexty) == corner:
                     self.cornersFound[index] = True
 
-            # Reconvert to tuple
+            # Reconvert it to a tuple
             self.cornersFound = tuple(self.cornersFound)
 
-            # Return the position of the nextState
+            # Return the position of the nextState as a tuple
             return (nextx, nexty)
         return False
         util.raiseNotDefined()
@@ -442,16 +445,17 @@ def cornersHeuristic(state, problem):
 
     # Find the distances from state[0] to the furthest of the unfound corners
     for index,cornerFound in enumerate(state[1]):
-        # Calculate the distance of a an unfound cornrer
+        # Calculate the manhattan distance of a an unfound cornrer
         if cornerFound == False:
             distance = util.manhattanDistance(xy1,corners[index])
-            # Find maximum of those distances
+
+            # Find largest of those distances
             if distance > max:
                 max = distance
     # Return the largest distance
     return max
     
-    
+    # Program doesn't reach it
     return 0 # Default to trivial solution
 
 class AStarCornersAgent(SearchAgent):
@@ -568,7 +572,9 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
+
     max = 0
+
     # Find the maze distance from state[0] to the furthest item(food)
     for food in foodGrid.asList():
         
@@ -577,7 +583,7 @@ def foodHeuristic(state, problem):
         if (position,food) in problem.heuristicInfo:
             distance = problem.heuristicInfo[(position,food)]
         else:
-            # Else calculate the mazeDistance between pacman and item
+            # Else calculate the mazeDistance between pacman and the item
             # and add it to the dictionary
             distance = mazeDistance(position,food,problem.startingGameState)
             problem.heuristicInfo[(position,food)] = distance
@@ -585,6 +591,9 @@ def foodHeuristic(state, problem):
         # Store the largest distance
         if distance > max:
             max = distance
+
+    # dictionary heuristicInfo cuts down the time taken from 70s to 1.3s
+
     # Return the largest distance
     return max
 
@@ -617,6 +626,7 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
+        # Returns the sequence of moves to the dot
         return search.aStarSearch(problem)
 
         util.raiseNotDefined()
@@ -655,11 +665,14 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         x,y = state
 
         "*** YOUR CODE HERE ***"
+        # If Pacman's position matches the location of a dot in the food Grid
+        # Then we reached a goal state
         for food in self.food.asList():
             xfood, yfood = food
             if xfood == x and yfood == y:
                 return True
         
+        # Else we didn't
         return False
             
         util.raiseNotDefined()
