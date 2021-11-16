@@ -115,27 +115,35 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+    # DFS algorithm and naming convention taken from class's notes.
+    # graph_search.pdf, page 27 - slightly modified for DFS
+
     #   function DEPTH-FIRST-SEARCH(problem) returns a solution or failure
 
-    # node ← a node with STATE=problem.INITIAL-STATE, PATH-COST=0
+    # node stores the starting state, an empty list of actions, 0 cost and no parent node
     node = (problem.getStartState(), [], 0, False)
-    # if problem.GOAL-TESt(node.STATE) then return SOLUTION(node)
+
+    # If node is the goal state, then an empty sequence of moves gets returned
     if problem.isGoalState(node[0]) == True:
             return []
-    # frontier ← a FIFO queue with node as the only element
+
+    # Frontier - Stack for DFS
     frontier = util.Stack()
+
+    # Push node to the frontier
     frontier.push(node)
-    # explored ← an empty set
+
+    # explored is an empty set
     explored = set()
+
     # loop do
     while True:
         # if EMPTY?(frontier) then return failure
         if frontier.isEmpty() == True:
             return False
-        # node ← POP(frontier)
+
+        # node POP(frontier)
         node = frontier.pop()
-        # add node.STATE to explored
-        # explored.add(node[0])
 
         # if problem.GOAL-TEST(child.STATE) then return SOLUTION(child)
         if problem.isGoalState(node[0]):
@@ -147,45 +155,55 @@ def depthFirstSearch(problem):
                 solution.insert(0, currentNode[1])
                 currentNode = currentNode[3]
 
+            # Returns the sequence of moves to get to the Goal State
             return solution
 
-        # for each action in problem.ACTIONS(node.STATE) do
+        # for each expanded node
         for expandedNode in problem.expand(node[0]):
-            # child ← CHILD-NODE(problem, node, action)
-            # child stores the child to the current state,the action to get there,
-            # the step cost and the parent node of the child
+
+            # child - CHILD-NODE(state, action, stepCost, parentNode)
             child = (expandedNode[0], expandedNode[1], expandedNode[2], node)
-            # if child.STATE is not in explored or frontier then
+
+            # If child hasn't yet been explored, add it to the explored set
             if child[0] not in explored:
                     explored.add(node[0])
-                # frontier ← INSERT(child, frontier)
+
+                    # frontier - INSERT(child, frontier)
                     frontier.push(child)
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-    #   function BREADTH-FIRST-SEARCH(problem) returns a solution or failure
+    # BFS algorithm and naming convention taken from class's notes.
+    # graph_search.pdf, page 27
+    
+    #BREADTH-FIRST-SEARCH(problem) returns a solution or failure
 
-    # node ← a node with STATE=problem.INITIAL-STATE, PATH-COST=0
+    # node stores the starting state, an empty list of actions, 0 cost and no parent node
     node = (problem.getStartState(), [], 0, False)
-    # if problem.GOAL-TESt(node.STATE) then return SOLUTION(node)
+    
+    # If node is the goal state, then an empty sequence of moves gets returned
     if problem.isGoalState(node[0]) == True:
             return []
-    # frontier ← a FIFO queue with node as the only element
+    
+    # Frontier - Queue for BFS 
     frontier = util.Queue()
+
+    # Push node to the frontier
     frontier.push(node)
-    # explored ← an empty set
+
+    # explored is an empty set
     explored = set()
+
     # loop do
     while True:
         # if EMPTY?(frontier) then return failure
         if frontier.isEmpty() == True:
             return False
-        # node ← POP(frontier)
+
+        # node - POP(frontier)
         node = frontier.pop()
-        # add node.STATE to explored
-        # explored.add(node[0])
 
         # if problem.GOAL-TEST(child.STATE) then return SOLUTION(child)
         if problem.isGoalState(node[0]):
@@ -197,22 +215,24 @@ def breadthFirstSearch(problem):
                 solution.insert(0, currentNode[1])
                 currentNode = currentNode[3]
 
+            # Returns the sequence of moves to get to the Goal State
             return solution
 
-        # for each action in problem.ACTIONS(node.STATE) do
+        # for each expanded node
         for expandedNode in problem.expand(node[0]):
-            # child ← CHILD-NODE(problem, node, action)
-            # child stores the child to the current state,the action to get there,
-            # the step cost and the parent node of the child
-            # if child.STATE is not in explored or frontier then
+
+            # child - CHILD-NODE(state, action, stepCost, parentNode)
             child = (expandedNode[0], expandedNode[1], expandedNode[2], node)
+
+            # If child hasn't yet been explored, add it to the explored set
             if child[0] not in explored:
                 explored.add(node[0])
 
-                if(child[0]) not in (node[0] for node in frontier.list):
-                # frontier ← INSERT(child, frontier)
+                # If child.STATE is not in the frontier queue
+                if child[0] not in (node[0] for node in frontier.list):
+                # frontier - INSERT(child, frontier)
                     frontier.push(child)
-
+    
 
     util.raiseNotDefined()
 
@@ -226,28 +246,49 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    # #   function A-STAR-SEARCH(problem) returns a solution or failure
+    # A* algorithm and naming convention taken from class's notes.
+    # graph_search.pdf, page 27 - slightly modified for A*
 
+    # A-STAR-SEARCH(problem) returns a solution or failure
+
+    # node stores the starting state, an empty list of actions, 0 cost and no parent node
     node = (problem.getStartState(), [], 0, False)
-    # node = problem.getStartState()
+
+    # If node is the goal state, then an empty sequence of moves gets returned
     if problem.isGoalState(node[0]):
         return []
 
-
+    # Frontier - Priority Queue for BFS
+    # Priority is based on the combinded cost of the step and the heuristic
     frontier = util.PriorityQueue()
+
+    # Push node to the frontier - 0 cost for the starting state
     frontier.push(node, 0)
+
+    # explored is an empty set
     explored = set()
 
+    # loop do
     while True:
+        # if EMPTY?(frontier) then return failure
         if frontier.isEmpty() == True:
             return False
+
+        # node - POP(frontier)   
         node = frontier.pop()
+
+        # if problem.GOAL-TEST(child.STATE) then return SOLUTION(child)
         if problem.isGoalState(node[0]):
+            # node[1] stores the sequence of moves to get to the goal state
             return node[1]
+
+        # If node hasn't yet been explored, add it to the explored set
         if node[0] not in explored:
             explored.add(node[0])
 
+            # for each expanded node
             for expandedNode in problem.expand(node[0]):
+
                 # Sequence stores the sequence of actions to get to Node
                 # Plus the action to get to the newly expanded node from Node
                 sequence = node[1] + [expandedNode[1]]
@@ -256,9 +297,14 @@ def aStarSearch(problem, heuristic=nullHeuristic):
                 # cost to get to the newly expanded node from Node
                 totalCost = node[2] + expandedNode[2]
 
-                #  child stores the current state, the sequence of actions to get to
-                #  the newly expanded node, the total cost and the parent node of the child
+                # child - CHILD-NODE(state, sequence, totalCost, parentNode)
+                # child stores the current state, the sequence of actions to get to
+                # the newly expanded node, the total cost and the parent node of the child
                 child = (expandedNode[0], sequence, totalCost, node)
+
+                # frontier - INSERT(child, frontier)
+                # child is given priority based on the combined totalCost to get to the child
+                # and the result of the heuristic of the child
                 frontier.push(child, totalCost + heuristic(expandedNode[0], problem))
     util.raiseNotDefined()
 
