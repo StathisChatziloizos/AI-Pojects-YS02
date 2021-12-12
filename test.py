@@ -1,4 +1,8 @@
-list1 = ["banana", 56, True, False]
+visitedCorner = 4 * [False]
+print(visitedCorner)
 
-newList = list(("new", "list", True, False))
-print(newList)
+for corner in visitedCorner:
+    if corner == False:
+        print("False")
+        exit()
+print("True") 

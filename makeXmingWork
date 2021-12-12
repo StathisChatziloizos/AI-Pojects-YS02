@@ -1,0 +1,15 @@
+HOW TO MAKE XMING WORK IN WSL2 WINDOWS 10
+-----------------------------------------
+
+1) Launch XLaunch with the default configuration
+
+
+2) Run this command:
+
+   export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+
+3) If it doesn't work go to:
+      show hidden icons --> XMING server --> view log --> get failed IP
+   Then go to:
+      C:\Program Files (x86)\Xming -> open X0 and add the failed IP address
+      under localHost
