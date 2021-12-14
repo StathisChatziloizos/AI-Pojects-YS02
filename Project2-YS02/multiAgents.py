@@ -84,12 +84,12 @@ class ReflexAgent(Agent):
             distance = util.manhattanDistance(newPos, food)
             bonus += 5/(distance**2)
 
-        # Deterrent to avoid ghosts
+        # Deterrent to avoid unscared ghosts
         ghostPenalty = 0
         for ghost in newGhostStates:
-            # If the ghost is at least 3 moves away of getting back to normal
+            # If the ghost is at least a move away of getting back to normal
             # we can skip it, as it poses no threat to pacman
-            if ghost.scaredTimer > 3:
+            if ghost.scaredTimer > 1:
                 continue
             # Getting too close to a ghost results in a big penalty, that
             # overpowers the score and any food bonuses
@@ -391,44 +391,42 @@ def betterEvaluationFunction(currentGameState):
     DESCRIPTION: <write something here so we know what you did>
     """
     "*** YOUR CODE HERE ***"
+    # Modified version of the evaluation function for Question 1.
+    # Basic scoring according to the location of food (like Q1).
+    # Actively seeks for scared ghosts, because they don't pose a threat and
+    # they might block access to food.
 
-     # Useful information you can extract from a GameState (pacman.py)
+    # Useful information you can extract from a GameState (pacman.py)
     newPos = currentGameState.getPacmanPosition()
     newFood = currentGameState.getFood()
     newGhostStates = currentGameState.getGhostStates()
-    newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
-    "*** YOUR CODE HERE ***"
     # List of the positions of each dot
     foodList = newFood.asList()
 
     bonus = 0
-    minDistance = 99999
     # Incentive to get closer to food
     for food in foodList:
         # The closer a dot is, the bigger the incentive
         distance = util.manhattanDistance(newPos, food)
-        bonus += 1/distance
+        bonus += 5/(distance**2)
 
-        if distance < minDistance:
-            minDistance = distance
-
-
-    # Deterrent to avoid ghosts
+    # Deterrent to avoid unscared ghosts
     ghostPenalty = 0
     for ghost in newGhostStates:
-        # If the ghost is at least 3 moves away of getting back to normal
-        # we can skip it, as it poses no threat to pacman
-        if ghost.scaredTimer > 4:
+        # If the ghost is scared dont avoid it. It will
+        # likely block access to food
+        if ghost.scaredTimer > 1:
+            # Bonus to follow the ghost
             ghostPenalty = -100
-            continue
-        # Getting too close to a ghost results in a big penalty, that
-        # overpowers the score and any food bonuses
-        if util.manhattanDistance(ghost.getPosition(), newPos) < 2:
-            ghostPenalty = 9999
+        else:
+            # Getting too close to an unscared ghost results in a big penalty,
+            # that overpowers the score and any food bonuses
+            if util.manhattanDistance(ghost.getPosition(), newPos) < 1:
+                ghostPenalty = 9999
 
     # Evaluation = score + bonus - ghostPenalty
-    return currentGameState.getScore() + 1/minDistance + 0.15 * bonus - ghostPenalty
+    return currentGameState.getScore() + bonus - ghostPenalty
     util.raiseNotDefined()    
 
 # Abbreviation
