@@ -36,12 +36,14 @@ class Scheduling(csp.CSP):
         self.domains = dict()
         # 2 variables are neighbors if the value of the one affects the other
         self.neighbors = dict()
+        self.row = dict()
         self.courses = []
 
         self.setVariables(Scheduling.inputFile, Scheduling.daysNum)
         self.setDomain()
         self.setNeighbors()
         csp.CSP.__init__(self, self.variables, self.domains, self.neighbors, self.constraintFunction)
+
 
 
 
@@ -95,22 +97,31 @@ class Scheduling(csp.CSP):
             for i in range(1, Scheduling.daysNum+1):
                 if i != var[1]:
                     self.neighbors.setdefault(var,[]).append((var[0], i))
+                    if i+1 < Scheduling.daysNum+1:
+                        self.neighbors.setdefault(var,[]).append((var[0], i+1))
+                    if i+2 < Scheduling.daysNum+1:
+                        self.neighbors.setdefault(var,[]).append((var[0], i+2))
+                    self.row.setdefault(var,[]).append((var[0], i))
 
         # print(self.neighbors)
 
     # i = course counter, j = day
     def constraintFunction(self, A, a, B, b):
+        if A == B:
+            return True
+
+        # Indexes of the courses corresponding to variables A and B
+        courseA_index = A[0] - 1
+        courseB_index = B[0] - 1
         # For same column - same day
         if A[1] == B[1]:
             if a == b != '-':
                 return False
 
-            # Indexes of the courses corresponding to variables A and B
-            courseA_index = A[0] - 1
-            courseB_index = B[0] - 1
+
 
             # Courses of the same semester can't be on the same day.
-            # Labs are obviously excluded from this constraint, hence semester > 0
+            # Labs are excluded from this constraint, hence semester > 0
             # (labs' semesters are set by default to -1)
             if self.courses[courseA_index].semester == self.courses[courseB_index].semester > 0:
                 # A and B cannot be both occupied
@@ -125,20 +136,113 @@ class Scheduling(csp.CSP):
                 if b != '-':
                     return False
         
+        if self.courses[courseA_index].hasLab == 'TRUE':
+            if a == '3-6':
+                return False
+            if B == (A[0] + 1,A[1]):
+                if a == '9-12' and b != '12-3':
+                    return False
+                if a == '12-3' and b != '3-6':
+                    return False
+
+
+        if self.courses[courseB_index].hasLab == 'TRUE':
+            if b == '3-6':
+                return False
+            if A == (B[0] + 1,A[1]):
+                if b == '9-12' and a != '12-3':
+                    return False
+                if b == '12-3' and a != '3-6':
+                    return False
+
+
+        if self.courses[courseA_index].isHard == self.courses[courseB_index].isHard == 'TRUE':
+            # if  A[1] != B[1] and B[1] < A[1] + 2 and A[0] != B[0] and a != '-':
+            if A[1] != B[1]:
+                if  A[1] < B[1] < A[1] + 2 and b != '-':
+                    print(A,B)
+                    # return False
+            if B[1] <A[1] < B[1] + 2 and a != '-':
+                    print(A,B)
+                    # return False
+
+
+                # if allVars:
+                #     allEmpty = True
+                #     for var in self.row[A]:
+                #         if self.infer_assignment()[var] != '-':
+                #             allEmpty = False
+                #             break
+                #     if allEmpty:
+                #         pass
+                        # return False
+
+                    # if var in self.infer_assignment() and self.infer_assignment()[var] == '-':
+                    #     return False
+                        # print(s1.infer_assignment())
+                        # print("\n\n")
+                        # break
+        # print(self.infer_assignment)
+        # if a == '-':
+        #     for var in self.row[A]:
+        #         allEmpty = False
+        #         if var in self.infer_assignment() and self.infer_assignment()[var] == a:
+        #             # return False
+        #             # print (self.infer_assignment()[var])
+        #             break
+        # assigned_vars = self.infer_assignment()
+        # print(assigned_vars)
+
+        # print(A, self.row[A])
+        # if B in self.row[A]:
+        #     if a == b == '-':
+        #         allEmpty = True
+        #         for var in self.row[A]:
+        #             if '9-12' in self.curr_domains[var] or '12-3' in self.curr_domains[var] or '3-6' in self.curr_domains[var]:
+        #                 print(var, self.curr_domains[var])
+        #                 allEmpty = False
+        #                 break
+        #         if allEmpty:
+        #             return False
+
+        # if a == '-':
+        #     allEmpty = True
+        #     for var in self.row[A]:
+        #         if var in self.infer_assignment():#self.infer_assignment()[var]:
+        #             allEmpty = False
+        #             break
+
+        #     if allEmpty:
+        #         return False
         
+        # if b == '-':
+        #     allEmpty = True
+        #     for var in self.row[B]:
+        #         if '9-12' in self.curr_domains[var] or '12-3' in self.curr_domains[var] or '3-6' in self.curr_domains[var]:
+        #             allEmpty = False
+        #             break
+
+        #     if allEmpty:
+        #         return False
+                
         return True
         # return False
 
 
-    def displayVariables(self, daysNum):
+    def displayVariables(self, daysNum, assignment):
         for i in range(1, Course.totalCourses+1):
+            print(f"{i}.", end='  ')
             for j in range(1, daysNum+1):
                 print(self.curr_domains[(i,j)], end=' ')
+                # print(f"[{assignment.get((i, j))}]", end='  ')
             print("\n")
         
 
 s1 = Scheduling()
+# csp.backtracking_search(s1, select_unassigned_variable=csp.first_unassigned_variable, inference=  csp.forward_checking, order_domain_values=csp.lcv)
 csp.backtracking_search(s1)
+
 # s1.display(s1.infer_assignment())
-s1.displayVariables(Scheduling.daysNum)
+s1.displayVariables(Scheduling.daysNum, s1.infer_assignment())
 # s1.display(s1.infer_assignment())
+# print(s1.infer_assignment())

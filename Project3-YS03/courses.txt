@@ -1,0 +1,258 @@
+----------- Course(1) -----------
+Semester: 1
+Course Name: Γραµµική Άλγεβρα
+Professor: ΓΙΑΝΝΟΠΟΥΛΟΥ
+Hard: TRUE
+Lab: FALSE
+----------- Course(2) -----------
+Semester: 1
+Course Name: Διακριτά Μαθηµατικά
+Professor: ΑΧΛΙΟΠΤΑΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(3) -----------
+Semester: 1
+Course Name: Εισαγωγή στην Πληροφορική και στις Τηλεπικοινωνίες
+Professor: ΤΣΑΛΓΑΤΙΔΟΥ
+Hard: FALSE
+Lab: FALSE
+----------- Course(4) -----------
+Semester: 1
+Course Name: Λογική Σχεδίαση
+Professor: ΠΑΣΧΑΛΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(5) -----------
+Semester: 1
+Course Name: Εισαγωγή στον Προγραµµατισµό
+Professor: ΣΤΑΜΑΤΟΠΟΥΛΟΣ
+Hard: FALSE
+Lab: TRUE
+----------- Course(6) -----------
+Semester: -1
+Course Name: LAB_Εισαγωγή στον Προγραµµατισµό
+Professor: ΣΤΑΜΑΤΟΠΟΥΛΟΣ
+Hard:  - 
+Lab:  - 
+----------- Course(7) -----------
+Semester: 3
+Course Name: Ανάλυση ΙΙ
+Professor: ΓΑΤΖΟΥΡΑ
+Hard: TRUE
+Lab: FALSE
+----------- Course(8) -----------
+Semester: 3
+Course Name: Πιθανότητες και στοιχεία Στατιστικής
+Professor: ΚΑΡΑΛΙΟΠΟΥΛΟΥ
+Hard: FALSE
+Lab: FALSE
+----------- Course(9) -----------
+Semester: 3
+Course Name: Αντικειµενοστραφής Προγραµµατισµός
+Professor: ΚΑΡΑΛΗ
+Hard: FALSE
+Lab: TRUE
+----------- Course(10) -----------
+Semester: -1
+Course Name: LAB_Αντικειµενοστραφής Προγραµµατισµός
+Professor: ΚΑΡΑΛΗ
+Hard:  - 
+Lab:  - 
+----------- Course(11) -----------
+Semester: 3
+Course Name: Σήµατα και Συστήµατα
+Professor: ΠΑΝΑΓΑΚΗΣ
+Hard: TRUE
+Lab: FALSE
+----------- Course(12) -----------
+Semester: 3
+Course Name: Εργαστήριο Κυκλωμάτων και Συστημάτων
+Professor: ΠΙΝΟ
+Hard: FALSE
+Lab: FALSE
+----------- Course(13) -----------
+Semester: 5
+Course Name: Αρχές Γλωσσών Προγραµµατισµού
+Professor: ΡΟΝΤΟΓΙΑΝΝΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(14) -----------
+Semester: 5
+Course Name: Γραφικά Ι 
+Professor: ΘΕΟΧΑΡΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(15) -----------
+Semester: 5
+Course Name: Αριθµητική Ανάλυση
+Professor: ΤΖΑΦΕΡΗΣ
+Hard: TRUE
+Lab: FALSE
+----------- Course(16) -----------
+Semester: 5
+Course Name: Εφαρμοσμένα Μαθηματικά
+Professor: ΓΑΤΖΟΥΡΑ
+Hard: FALSE
+Lab: FALSE
+----------- Course(17) -----------
+Semester: 5
+Course Name: Υλοποίηση Συστημάτων Βάσεων Δεδομένων
+Professor: ΙΩΑΝΝΙΔΗΣ
+Hard: TRUE
+Lab: TRUE
+----------- Course(18) -----------
+Semester: -1
+Course Name: LAB_Υλοποίηση Συστημάτων Βάσεων Δεδομένων
+Professor: ΙΩΑΝΝΙΔΗΣ
+Hard:  - 
+Lab:  - 
+----------- Course(19) -----------
+Semester: 5
+Course Name: Λειτουργικά Συστήµατα
+Professor: ΧΑΤΖΗΕΥΘΥΜΙΑΔΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(20) -----------
+Semester: 5
+Course Name: Αρχιτεκτονική Υπολογιστών ΙΙ
+Professor: ΓΚΙΖΟΠΟΥΛΟΣ
+Hard: TRUE
+Lab: FALSE
+----------- Course(21) -----------
+Semester: 5
+Course Name: Τεχνητή Νοηµοσύνη (ΤΟ ΚΑΛΥΤΕΡΟ!!!!)
+Professor: ΚΟΥΜΠΑΡΑΚΗΣ
+Hard: FALSE
+Lab: TRUE
+----------- Course(22) -----------
+Semester: -1
+Course Name: LAB_Τεχνητή Νοηµοσύνη (ΤΟ ΚΑΛΥΤΕΡΟ!!!!)
+Professor: ΚΟΥΜΠΑΡΑΚΗΣ
+Hard:  - 
+Lab:  - 
+----------- Course(23) -----------
+Semester: 5
+Course Name: Σχεδίαση Ψηφιακών Συστηµάτων -VHDL
+Professor: ΠΑΣΧΑΛΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(24) -----------
+Semester: 5
+Course Name: Τηλεπικοινωνιακά Δίκτυα 
+Professor: ΒΑΡΟΥΤΑΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(25) -----------
+Semester: 5
+Course Name: Ψηφιακή Επεξεργασία Σήµατος
+Professor: ΑΛΕΞΑΝΔΡΟΠΟΥΛΟΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(26) -----------
+Semester: 5
+Course Name: Δίκτυα Επικοινωνιών ΙΙ
+Professor: ΜΠΑΛΑΟΥΡΑΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(27) -----------
+Semester: 7
+Course Name: Αλγοριθµική Επιχειρησιακή Έρευνα
+Professor: ΖΗΣΙΜΟΠΟΥΛΟΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(28) -----------
+Semester: 7
+Course Name: Προηγµένα Θέµατα Αλγορίθµων
+Professor: ΦΟΥΡΤΟΥΝΕΛΗ
+Hard: FALSE
+Lab: FALSE
+----------- Course(29) -----------
+Semester: 7
+Course Name: Ειδικά Θέματα Θεωρητικής Πληροφορικής: Αλγόριθμοι Δομικής Βιοπληροφορικής
+Professor: ΑΧΛΙΟΠΤΑΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(30) -----------
+Semester: 7
+Course Name: Αλγόριθμοι Βιοπληροφορικής
+Professor: ΕΜΙΡΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(31) -----------
+Semester: 7
+Course Name: Προηγμένοι Επιστημονικοί Υπολογισμοί
+Professor: ΤΖΑΦΕΡΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(32) -----------
+Semester: 7
+Course Name: Υπολογιστική Πολυπλοκότητα
+Professor: ΓΙΑΝΝΟΠΟΥΛΟΥ
+Hard: FALSE
+Lab: FALSE
+----------- Course(33) -----------
+Semester: 7
+Course Name: Ανάπτυξη Λογισµικού για Αλγοριθμικά Προβλήματα
+Professor: ΕΜΙΡΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(34) -----------
+Semester: 7
+Course Name: Ανάπτυξη Λογισµικού για Πληροφοριακά Συστήματα
+Professor: ΙΩΑΝΝΙΔΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(35) -----------
+Semester: 7
+Course Name: Επικοινωνία Ανθρώπου Μηχανής
+Professor: ΡΟΥΣΣΟΥ
+Hard: FALSE
+Lab: FALSE
+----------- Course(36) -----------
+Semester: 7
+Course Name: ΤΠΕ στη Μάθηση (Πληροφορική κ Εκπαίδευση)
+Professor: ΓΟΓΟΥΛΟΥ
+Hard: FALSE
+Lab: FALSE
+----------- Course(37) -----------
+Semester: 7
+Course Name: Τεχνητή Νοημοσύνη ΙΙ (ΤΟ ΔΕΥΤΕΡΟ ΚΑΛΥΤΕΡΟ!!!)
+Professor: ΚΟΥΜΠΑΡΑΚΗΣ
+Hard: TRUE
+Lab: TRUE
+----------- Course(38) -----------
+Semester: -1
+Course Name: LAB_Τεχνητή Νοημοσύνη ΙΙ (ΤΟ ΔΕΥΤΕΡΟ ΚΑΛΥΤΕΡΟ!!!)
+Professor: ΚΟΥΜΠΑΡΑΚΗΣ
+Hard:  - 
+Lab:  - 
+----------- Course(39) -----------
+Semester: 7
+Course Name: Δοµή και Θεσµοί της Ευρωπαϊκής Ένωσης
+Professor: ΤΟΛΙΔΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(40) -----------
+Semester: 7
+Course Name: Σχεδίαση VLSI Κυκλωµάτων
+Professor: ΝΙΚΑΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(41) -----------
+Semester: 7
+Course Name: Ειδικά Θέματα Επικοινωνιών και Επεξεργασίας Σήματος: Ενισχυτική μηχανική μάθηση και στοχαστικά παίγνια
+Professor: ΚΑΛΟΥΠΤΣΙΔΗΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(42) -----------
+Semester: 7
+Course Name: Ανάπτυξη Λογισμικού για Συστήματα Δικτύων και Τηλεπικοινωνιών 
+Professor: ΜΠΑΛΑΟΥΡΑΣ
+Hard: FALSE
+Lab: FALSE
+----------- Course(43) -----------
+Semester: 7
+Course Name: Συστήματα Πληροφορικής και e-Προσβασιμότητα για μαθητές με αναπηρία 
+Professor: ΠΙΝΟ
+Hard: FALSE
+Lab: FALSE
