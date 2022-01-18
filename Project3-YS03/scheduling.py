@@ -35,9 +35,7 @@ class Scheduling(csp.CSP):
 
     def __init__(self):
         self.variables = []
-        # Dictionary {variable : domain of that variable}
         self.domains = dict()
-        # 2 variables are neighbors if the value of the one affects the other
         self.neighbors = dict()
         self.row = dict()
         self.courses = []
@@ -59,12 +57,11 @@ class Scheduling(csp.CSP):
         with open(inputFile,'r') as csv_file:
             csv_reader = csv.reader(csv_file)
 
+            # Ignore fields row
             next(csv_reader)
-            # i = 0
+
             for item in csv_reader:
-                # i+=1
-                # if i > 5:
-                #     return
+
                 course = Course(int(item[0]), item[1], item[2], item[3], item[4])
                 courses.append(course)
                 # If it has a lab
@@ -74,52 +71,45 @@ class Scheduling(csp.CSP):
                 # If its a difficult course
                 if item[3] == 'TRUE':
                     self.difficultList.append(course.index)
-
-        # for course in courses:
-        #     course.print()
         
         return courses
 
     def setVariables(self,inputFile, daysNum):
-        """ Variables of form (x,y) """
+        """ Variables of form (x,y). Simulates the creation of a 2D Array
+            where the rows are the courses and the columns the days """
         self.courses = self.readFile(inputFile)
         for i in range(1, Course.totalCourses+1):
             for j in range(1, daysNum+1):
-            #     print('-', end=' ')
-            # print("\n")
                 self.variables.append((i,j))
-        # print(self.variables)
 
     def setDomain(self):
-        """ Domain of form (M,N,A,-) --> (Morning, Noon, Afternoon, Empty) """
+        """ Domain of form (-, 9-12, 12-3, 3-6) """
         for var in self.variables:
-            # self.domains[var] = ['9-12','12-3','3-6', '-']
             self.domains[var] = ['-','9-12','12-3','3-6']
-            # self.domains[var] = [111,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43]
-            # self.domains[var] = ['M','N','A']
-            # print(self.domains)
 
     def setNeighbors(self):
+        """ The neighbors of a variable are the rest of the variables on its column and row"""
         for var in self.variables:
-            (x,y) = var
-            # Variable to the right of var
-            varR = (x,y+1)
-            # Variable to the right of varR
-            varRR = (x,y+2)
             for i in range(1,Course.totalCourses+1):
+                # Column
                 if i != var[0]:
                     self.neighbors.setdefault(var,[]).append((i, var[1]))
 
             for i in range(1, Scheduling.daysNum+1):
+                # Row
                 if i != var[1]:
                     self.neighbors.setdefault(var,[]).append((var[0], i))
                     self.row.setdefault(var,[]).append((var[0], i))
 
     def constraintFunction(self, A, a, B, b):
+        """ Functions that returns true only if the values a, b of their corresponding
+            variables A, B satisfy all the constraints of the scheduling problem"""
 
         # Indexes of the courses corresponding to variables A and B
         courseA_index = A[0] - 1
         courseB_index = B[0] - 1
+
+
         # For same column - same day
         if A[1] == B[1]:
             if a == b != '-':
@@ -129,11 +119,11 @@ class Scheduling(csp.CSP):
             # Labs are excluded from this constraint, hence semester > 0
             # (labs' semesters are set by default to -1)
             if self.courses[courseA_index].semester == self.courses[courseB_index].semester > 0:
-                # A and B cannot be both occupied
+                # A and B slots cannot be both occupied
                 if a != '-' and b != '-':
                     return False
-# ------------------------------------------------------------------------------------------------
-            # Courses of the same professor
+
+            # Courses of the same professor cannot be on the same day
             if self.courses[courseA_index].professor == self.courses[courseB_index].professor:
                 # Labs are excluded from this constraint, because they can be and should be on the same day
                 if self.courses[courseA_index].semester != -1 and self.courses[courseB_index].semester != -1:
@@ -141,10 +131,11 @@ class Scheduling(csp.CSP):
                     if a != '-' and b !='-':
                         return False
 
-# ------------------------------------------------------------------------------------------------
 
         # For same row - same course
         if A[0] == B[0]:
+            # If a course is already assigned a time slot, it can't be assigned again
+            # i.e one slot for a course == one non '-' value for a row
             if a == b != '-':
                 return False
             if a == '9-12' or a == '12-3' or a == '3-6':
@@ -152,8 +143,12 @@ class Scheduling(csp.CSP):
                     return False
         
         if self.courses[courseA_index].hasLab == 'TRUE':
+            # If a course has a lab, it must be examed right after the course is examed
+
+            # Last time slot of a day is obviously excluded for the course
             if a == '3-6':
                 return False
+            # Acceptable solutions 9-12 --> 12-3 & 12-3 --> 3-6
             if B == (A[0] + 1,A[1]):
                 if a == '9-12' and b != '12-3':
                     return False
@@ -170,33 +165,39 @@ class Scheduling(csp.CSP):
                 if b == '12-3' and a != '3-6':
                     return False
                    
-
+        # If its a difficult course, at least one day must be seperating it from another difficult course
         if self.courses[courseA_index].isDifficult == self.courses[courseB_index].isDifficult == 'TRUE':
             if  A[1] <= B[1] <= A[1] + 1 and b != '-' and a!= '-':
                 return False
             if B[1] <= A[1] <= B[1] + 1 and a != '-' and b!= '-':
                 return False
-# ------------------------------------------------------------------------------------------------
 
+            # If A has been assigned a time slot
             if a!= '-':
                 domain = self.curr_domains
                 if domain:
+                    # Make sure all other difficult courses are not within a day
                     for i in self.difficultList:
                         if A[1] + 1 <= Scheduling.daysNum and '-' not in domain[(i,A[1] + 1)]:
                             return False
+            # IF B has been assigned a time slot
             if b!= '-':
                 domain = self.curr_domains
                 if domain:
+                    # Make sure all other difficult courses are not within a day
                     for i in self.difficultList:
                         if B[1] + 1 <= Scheduling.daysNum and '-' not in domain[(i,B[1] + 1)]:
                             return False
 
-# ------------------------------------------------------------------------------------------------
-        
+
+        # Make sure a row is not empty, due to the fact that a row represents a course
+        # and a course has ta have an exam date and a non empty time slot 
         if A[0] == B[0]:
             if  a == b == '-':
                 flag = False
+                # If both A and B are empty
                 for var in self.row[A]:
+                    # Make sure that some non empty time slots remain on the same row
                     if self.curr_domains:
                         domain = self.curr_domains[var]
                         if '9-12' in domain or '12-3' in domain or '3-6' in domain:
@@ -204,15 +205,16 @@ class Scheduling(csp.CSP):
                             break
                     else:
                         flag = True
+                # If only empty time slots remain
                 if flag == False:
                     return False
 
-# ------------------------------------------------------------------------------------------------
-                
+        # If all constraints are satisfied 
         return True
 
     def display(self, daysNum, assignment):
-        """Displays the solution of the scheduling problem on a seperate file, solution_csp_exams.txt"""
+        """Displays the solution of the scheduling problem on a seperate file, solution_csp_exams.txt
+           - FullScreen is recomended when opening "solution_csp_exams.txt" for a more readable experience"""
 
         with  open ('solution_csp_exams.txt', 'w') as f:
             with contextlib.redirect_stdout(f):
@@ -233,7 +235,7 @@ class Scheduling(csp.CSP):
 
 
 def algorithm(option):
-    """Solves the scheduling problem in one of three ways (FC, MAC, MinConflicts) and
+    """ Solves the scheduling problem in one of three ways (FC, MAC, MinConflicts) and
         prints out the results and some metrics of the algorithm used"""
 
     # Initialize Exams Scheduling problem
