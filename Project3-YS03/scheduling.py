@@ -1,7 +1,7 @@
 import csp
 import csv
 import contextlib
-import io
+import random
 
 class Course:
 
@@ -217,16 +217,18 @@ class Scheduling(csp.CSP):
 
             if a!= '-':
                 domain = self.curr_domains
-                for i in self.difficultList:
-                    if A[1] + 1 <= Scheduling.daysNum and '-' not in domain[(i,A[1] + 1)]:
-                        # print(f"AAA --- {A}, ({i},{A[1]+1}) --- {self.curr_domains[(i,A[1] + 1)]}")
-                        return False
+                if domain:
+                    for i in self.difficultList:
+                        if A[1] + 1 <= Scheduling.daysNum and '-' not in domain[(i,A[1] + 1)]:
+                            # print(f"AAA --- {A}, ({i},{A[1]+1}) --- {self.curr_domains[(i,A[1] + 1)]}")
+                            return False
             if b!= '-':
                 domain = self.curr_domains
-                for i in self.difficultList:
-                    if B[1] + 1 <= Scheduling.daysNum and '-' not in domain[(i,B[1] + 1)]:
-                        # print(f"BBB --- {B}, ({i},{B[1]+1}) --- {self.curr_domains[(i,B[1] + 1)]}")
-                        return False
+                if domain:
+                    for i in self.difficultList:
+                        if B[1] + 1 <= Scheduling.daysNum and '-' not in domain[(i,B[1] + 1)]:
+                            # print(f"BBB --- {B}, ({i},{B[1]+1}) --- {self.curr_domains[(i,B[1] + 1)]}")
+                            return False
 
 # ------------------------------------------------------------------------------------------------
         
@@ -234,10 +236,13 @@ class Scheduling(csp.CSP):
             if  a == b == '-':
                 flag = False
                 for var in self.row[A]:
-                    domain = self.curr_domains[var]
-                    if '9-12' in domain or '12-3' in domain or '3-6' in domain:
+                    if self.curr_domains:
+                        domain = self.curr_domains[var]
+                        if '9-12' in domain or '12-3' in domain or '3-6' in domain:
+                            flag = True
+                            break
+                    else:
                         flag = True
-                        break
                 if flag == False:
                     # print(f"A,B = {A},{B}   {domain}")
                     # self.unassign(B,self.infer_assignment())
@@ -326,14 +331,33 @@ class Scheduling(csp.CSP):
                         print(self.curr_domains[(i,j)], end=' ')
                         # print(f"[{assignment.get((i, j))}]", end='  ')
                     print("\n")
-        
-# Exams Schedule
-exams = Scheduling()
-# csp.backtracking_search(s1, select_unassigned_variable=csp.first_unassigned_variable, inference=  csp.forward_checking, order_domain_values=csp.lcv)
-csp.backtracking_search(exams)
 
-# s1.display(s1.infer_assignment())
-exams.display(Scheduling.daysNum, exams.infer_assignment())
-print(f"Number of assigns: {exams.nassigns}")
-# s1.display(s1.infer_assignment())
-# print(s1.infer_assignment())
+
+
+
+def main():
+    # Exams Schedule
+    exams = Scheduling()
+
+
+    # FC algorithm
+    # result = csp.backtracking_search(exams, select_unassigned_variable=csp.first_unassigned_variable, inference=csp.forward_checking, order_domain_values=csp.lcv)
+    # MAC algorithm
+    result =  csp.backtracking_search(exams, select_unassigned_variable=csp.first_unassigned_variable, inference=csp.mac, order_domain_values=csp.lcv)
+    # MINCONFLICTS algorithm
+    # random.shuffle(exams.variables)
+    # result = csp.min_conflicts(exams, 100000)
+    if result:
+        print("Problem Satisfiable")
+    else:
+        print("Problem not Satisfiable")
+    # csp.backtracking_search(exams)
+
+    # s1.display(s1.infer_assignment())
+    exams.display(Scheduling.daysNum, exams.infer_assignment())
+    print(f"Number of assigns: {exams.nassigns}")
+    # s1.display(s1.infer_assignment())
+    # print(s1.infer_assignment())
+
+if __name__ == "__main__":
+    main()
