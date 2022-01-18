@@ -426,7 +426,7 @@ def main():
         random.shuffle(variables);
         cs =  CSP(variables, domains, neighbors, constrainFunction);
         minStartTime = time.time();
-        resultMin = min_conflicts(cs, 1000);
+        resultMin = min_conflicts(cs, 10000);
         minEndTime = time.time();
         # print(resultMin);
         if resultMin:

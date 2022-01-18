@@ -2,6 +2,7 @@ import csp
 import csv
 import contextlib
 import random
+import time
 
 class Course:
 
@@ -42,6 +43,7 @@ class Scheduling(csp.CSP):
         self.courses = []
         self.difficultList = []
 
+        Course.totalCourses = 0
         self.setVariables(Scheduling.inputFile, Scheduling.daysNum)
         self.setDomain()
         self.setNeighbors()
@@ -107,42 +109,13 @@ class Scheduling(csp.CSP):
             for i in range(1,Course.totalCourses+1):
                 if i != var[0]:
                     self.neighbors.setdefault(var,[]).append((i, var[1]))
-            
-            # if y+1 < Scheduling.daysNum+1:
-            #     for i in range(1,Course.totalCourses+1):
-            #         if i != var[0]:
-            #             # add column to the right of var
-            #             self.neighbors.setdefault(var,[]).append((i, varR[1]))
 
-            # if y+2 < Scheduling.daysNum+1:
-            #     for i in range(1,Course.totalCourses+1):
-            #         if i != var[0]:
-            #             # add column to the right of var
-            #             self.neighbors.setdefault(var,[]).append((i, varRR[1]))
             for i in range(1, Scheduling.daysNum+1):
                 if i != var[1]:
                     self.neighbors.setdefault(var,[]).append((var[0], i))
-                    # if i+1 < Scheduling.daysNum+1:
-                    #     self.neighbors.setdefault(var,[]).append((var[0], i+1))
-                    # if i+2 < Scheduling.daysNum+1:
-                    #     self.neighbors.setdefault(var,[]).append((var[0], i+2))
                     self.row.setdefault(var,[]).append((var[0], i))
-                # if self.courses[var[0]-1].isDifficult == 'TRUE' and (var[0], i) not in self.difficult:
-                #     self.difficult.setdefault(var,[]).append((var[0], i))
-            # for i in range(1,Course.totalCourses+1):
-            #     if self.courses[var[0]-1].isDifficult == 'TRUE':
-            #         self.difficult.add(var)
-            #         for v in self.row[var]:
-            #             self.difficult.add(v)
 
-        A = (4,5)
-        # print(A, self.neighbors[A])
-        # print(self.neighbors)
-
-    # i = course counter, j = day
     def constraintFunction(self, A, a, B, b):
-        if A == B:
-            return True
 
         # Indexes of the courses corresponding to variables A and B
         courseA_index = A[0] - 1
@@ -166,7 +139,6 @@ class Scheduling(csp.CSP):
                 if self.courses[courseA_index].semester != -1 and self.courses[courseB_index].semester != -1:
                     # If both variables have a value corresponding to an assigned slot
                     if a != '-' and b !='-':
-                        # print(f"A = {A}, B = {B}, a = {a}, b = {b}")
                         return False
 
 # ------------------------------------------------------------------------------------------------
@@ -197,21 +169,12 @@ class Scheduling(csp.CSP):
                     return False
                 if b == '12-3' and a != '3-6':
                     return False
-# **********************************************************************************************************
-# TODO: Add two right columns, figure out the fcking bug 
-# **********************************************************************************************************
                    
 
         if self.courses[courseA_index].isDifficult == self.courses[courseB_index].isDifficult == 'TRUE':
-            # if  A[1] != B[1] and B[1] < A[1] + 2 and A[0] != B[0] and a != '-':
-            # if A[0] != B[0]:
             if  A[1] <= B[1] <= A[1] + 1 and b != '-' and a!= '-':
-                # pass
-                # print("b != '-' (a,b)",a, b, A,B)
                 return False
             if B[1] <= A[1] <= B[1] + 1 and a != '-' and b!= '-':
-                # pass
-                # print("a != '-' (a,b)",a, b, A,B)
                 return False
 # ------------------------------------------------------------------------------------------------
 
@@ -220,14 +183,12 @@ class Scheduling(csp.CSP):
                 if domain:
                     for i in self.difficultList:
                         if A[1] + 1 <= Scheduling.daysNum and '-' not in domain[(i,A[1] + 1)]:
-                            # print(f"AAA --- {A}, ({i},{A[1]+1}) --- {self.curr_domains[(i,A[1] + 1)]}")
                             return False
             if b!= '-':
                 domain = self.curr_domains
                 if domain:
                     for i in self.difficultList:
                         if B[1] + 1 <= Scheduling.daysNum and '-' not in domain[(i,B[1] + 1)]:
-                            # print(f"BBB --- {B}, ({i},{B[1]+1}) --- {self.curr_domains[(i,B[1] + 1)]}")
                             return False
 
 # ------------------------------------------------------------------------------------------------
@@ -244,77 +205,15 @@ class Scheduling(csp.CSP):
                     else:
                         flag = True
                 if flag == False:
-                    # print(f"A,B = {A},{B}   {domain}")
-                    # self.unassign(B,self.infer_assignment())
-                    # self.unassign(A,self.infer_assignment())
                     return False
 
 # ------------------------------------------------------------------------------------------------
-
-
-                # if allVars:
-                #     allEmpty = True
-                #     for var in self.row[A]:
-                #         if self.infer_assignment()[var] != '-':
-                #             allEmpty = False
-                #             break
-                #     if allEmpty:
-                #         pass
-                        # return False
-
-                    # if var in self.infer_assignment() and self.infer_assignment()[var] == '-':
-                    #     return False
-                        # print(s1.infer_assignment())
-                        # print("\n\n")
-                        # break
-        # print(self.infer_assignment)
-        # if a == '-':
-        #     for var in self.row[A]:
-        #         allEmpty = False
-        #         if var in self.infer_assignment() and self.infer_assignment()[var] == a:
-        #             # return False
-        #             # print (self.infer_assignment()[var])
-        #             break
-        # assigned_vars = self.infer_assignment()
-        # print(assigned_vars)
-
-        # print(A, self.row[A])
-        # if B in self.row[A]:
-        #     if a == b == '-':
-        #         allEmpty = True
-        #         for var in self.row[A]:
-        #             if '9-12' in self.curr_domains[var] or '12-3' in self.curr_domains[var] or '3-6' in self.curr_domains[var]:
-        #                 print(var, self.curr_domains[var])
-        #                 allEmpty = False
-        #                 break
-        #         if allEmpty:
-        #             return False
-
-        # if a == '-':
-        #     allEmpty = True
-        #     for var in self.row[A]:
-        #         if var in self.infer_assignment():#self.infer_assignment()[var]:
-        #             allEmpty = False
-        #             break
-
-        #     if allEmpty:
-        #         return False
-        
-        # if b == '-':
-        #     allEmpty = True
-        #     for var in self.row[B]:
-        #         if '9-12' in self.curr_domains[var] or '12-3' in self.curr_domains[var] or '3-6' in self.curr_domains[var]:
-        #             allEmpty = False
-        #             break
-
-        #     if allEmpty:
-        #         return False
                 
         return True
-        # return False
-
 
     def display(self, daysNum, assignment):
+        """Displays the solution of the scheduling problem on a seperate file, solution_csp_exams.txt"""
+
         with  open ('solution_csp_exams.txt', 'w') as f:
             with contextlib.redirect_stdout(f):
                 print ("\n- - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - S O L U T I O N - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -")
@@ -328,36 +227,84 @@ class Scheduling(csp.CSP):
                 for i in range(1, Course.totalCourses+1):
                     print(f"C{i}.", end='  ')
                     for j in range(1, daysNum+1):
+                        # printing curr domains is way faster than self.infer_assignment
                         print(self.curr_domains[(i,j)], end=' ')
-                        # print(f"[{assignment.get((i, j))}]", end='  ')
                     print("\n")
+
+
+def algorithm(option):
+    """Solves the scheduling problem in one of three ways (FC, MAC, MinConflicts) and
+        prints out the results and some metrics of the algorithm used"""
+
+    # Initialize Exams Scheduling problem
+    exams = Scheduling()
+
+    if option == 'FC':
+        # FC algorithm
+
+        print("---------------------------------------------")
+        print("FC Algorithm\n")
+        startTime = time.time()
+        result = csp.backtracking_search(exams, select_unassigned_variable=csp.first_unassigned_variable, inference=csp.forward_checking, order_domain_values=csp.lcv)
+        finishTime = time.time()
+        exams.display(Scheduling.daysNum, exams.infer_assignment())
+
+        if result:
+            print("Problem Satisfiable")
+        else:
+            print("Problem not Satisfiable")
+        print(f"Number of assigns: {exams.nassigns}")
+        print(f"Time elapsed: {finishTime - startTime} sec")
+
+
+    elif option == 'MAC':
+        # MAC algorithm
+
+        print("---------------------------------------------")
+        print("MAC Algorithm\n")
+        startTime = time.time()
+        result =  csp.backtracking_search(exams, select_unassigned_variable=csp.first_unassigned_variable, inference=csp.mac, order_domain_values=csp.lcv)
+        finishTime = time.time()
+
+        if result:
+            print("Problem Satisfiable")
+        else:
+            print("Problem not Satisfiable")
+        print(f"Number of assigns: {exams.nassigns}")
+        print(f"Time elapsed: {finishTime - startTime} sec")
+
+    elif option == 'MINCONFLICTS':
+        # MINCONFLICTS algorithm
+
+        print("---------------------------------------------")
+        print("MINCONFLICTS Algorithm\n")
+        # Shuffle the variables of the problem for extra randomness
+        random.shuffle(exams.variables)
+        startTime = time.time()
+        result = csp.min_conflicts(exams, 100000)
+        finishTime = time.time()
+
+        if result:
+            print("Problem Satisfiable")
+        else:
+            print("Problem not Satisfiable")
+        print(f"Number of assigns: {exams.nassigns}")
+        print(f"Time elapsed: {finishTime - startTime} sec")
+
 
 
 
 
 def main():
-    # Exams Schedule
-    exams = Scheduling()
 
+    # Algorithms used to test the Scheduling problem
+    algorithms = ['FC', 'MAC', 'MINCONFLICTS']
 
-    # FC algorithm
-    # result = csp.backtracking_search(exams, select_unassigned_variable=csp.first_unassigned_variable, inference=csp.forward_checking, order_domain_values=csp.lcv)
-    # MAC algorithm
-    result =  csp.backtracking_search(exams, select_unassigned_variable=csp.first_unassigned_variable, inference=csp.mac, order_domain_values=csp.lcv)
-    # MINCONFLICTS algorithm
-    # random.shuffle(exams.variables)
-    # result = csp.min_conflicts(exams, 100000)
-    if result:
-        print("Problem Satisfiable")
-    else:
-        print("Problem not Satisfiable")
-    # csp.backtracking_search(exams)
-
-    # s1.display(s1.infer_assignment())
-    exams.display(Scheduling.daysNum, exams.infer_assignment())
-    print(f"Number of assigns: {exams.nassigns}")
-    # s1.display(s1.infer_assignment())
-    # print(s1.infer_assignment())
+    # Solve the scheduling problem in all three ways (FC, MAC, MinConflicts),
+    # print out the results and metrics of each and display an acceptable solution
+    # of the scheduling problem on "solution_csp_exams.txt" file
+    for option in algorithms:
+        algorithm(option)
 
 if __name__ == "__main__":
     main()
